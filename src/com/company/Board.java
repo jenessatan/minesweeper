@@ -2,6 +2,7 @@ package com.company;
 
 
 import java.util.Random;
+import java.util.Scanner;
 
 public class Board {
 
@@ -9,12 +10,14 @@ public class Board {
     private int gridSize;
     private int numMines;
     private Cell[][] board;
+    private int revealedCount;
 
     public Board(Level.Difficulty level) {
         this.level = level;
         this.gridSize = level.getDimensions();
         this.numMines = level.getNumBombs();
         this.board = new Cell[this.gridSize][this.gridSize];
+        this.revealedCount = 0;
     }
 
     public void init() {
@@ -32,9 +35,36 @@ public class Board {
     }
 
     public void playGame() {
+        Scanner scanner = new Scanner(System.in);
         boolean isGameOver = false;
         boolean isDead = false;
+        int selectedRow;
+        int selectedColumn;
+        do {
+            System.out.println("Current board status: ");
+            printBoard();
+            System.out.println("Select a row: ");
+            selectedRow = scanner.nextInt();
+            System.out.println("Select a column: ");
+            selectedColumn = scanner.nextInt();
+            if(board[selectedRow][selectedColumn].getIsBomb()) {
+                isGameOver = true;
+                isDead = true;
+                revealAll();
+            } else {
+                revealCell(selectedRow, selectedColumn);
+                if(revealedCount >= ((gridSize * gridSize) - numMines)) {
+                    isGameOver = true;
+                }
+            }
+        } while(!isGameOver);
+        System.out.println("GAME OVER!");
         printBoard();
+        if(isDead) {
+            System.out.println("Sorry! The cell you chose blew up and now you're dead!");
+        } else {
+            System.out.println("Congratulations! You won!");
+        }
     }
 
     private void printBoard() {
@@ -74,7 +104,7 @@ public class Board {
         int row;
         int col;
         int placedMines = 0;
-        do {
+        while (placedMines < numMines) {
             randomIndex = random.nextInt(bombs.length - 1);
             int[] randomCell = bombs[randomIndex];
             row = randomCell[0];
@@ -83,7 +113,7 @@ public class Board {
                 board[row][col].setBomb();
                 placedMines++;
             }
-        } while (placedMines < numMines);
+        }
     }
 
     private void revealAll() {
@@ -124,5 +154,33 @@ public class Board {
             }
         }
         return bombCount;
+    }
+
+    private void revealCell(int row, int col) {
+        Cell cell = board[row][col];
+        if(!cell.getRevealed()) {
+            revealedCount++;
+            cell.setRevealed();
+        } else {
+          return;
+        }
+        if(cell.getValue() > 0) {
+            return;
+        }
+        for (int r = row - 1; r <= row + 1; r++) {
+            // check to see if out of row bounds
+            if (r < 0 || r >= gridSize) {
+                continue;
+            }
+            for (int c = col - 1; c <= col + 1; c++) {
+                // check to see if out of column bounds
+                if (c < 0 || c >= gridSize || (r == row && c == col)) {
+                    continue;
+                }
+                if (!board[r][c].getIsBomb()) {
+                    revealCell(r, c);
+                }
+            }
+        }
     }
 }
