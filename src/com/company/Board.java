@@ -1,6 +1,7 @@
 package com.company;
 
 
+import java.util.Random;
 
 public class Board {
 
@@ -17,11 +18,16 @@ public class Board {
     }
 
     public void init() {
+        int totalCells = gridSize * gridSize;
+        int[][] bombs = new int[totalCells][2];
         for(int row = 0; row < gridSize; row++) {
             for(int col = 0; col < gridSize; col++) {
                 board[row][col] = new Cell(row, col);
+                int bombIdx = row * gridSize + col;
+                bombs[bombIdx] = new int[]{row, col};
             }
         }
+        placeMines(bombs);
     }
 
     public void playGame() {
@@ -59,5 +65,31 @@ public class Board {
             }
         }
         System.out.print("\n");
+    }
+
+    private void placeMines(int[][] bombs) {
+        Random random = new Random();
+        int randomIndex;
+        int row;
+        int col;
+        int placedMines = 0;
+        do {
+            randomIndex = random.nextInt(bombs.length - 1);
+            int[] randomCell = bombs[randomIndex];
+            row = randomCell[0];
+            col = randomCell[1];
+            if(!board[row][col].getIsBomb()) {
+                board[row][col].setBomb();
+                placedMines++;
+            }
+        } while(placedMines < numMines);
+    }
+
+    private void revealAll() {
+        for(int row = 0; row < gridSize; row++) {
+            for(int col = 0; col < gridSize; col++) {
+                board[row][col].setRevealed();
+            }
+        }
     }
 }

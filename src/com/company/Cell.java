@@ -7,16 +7,20 @@ public class Cell {
     private int row;
     private int column;
 
-    public Cell(int row, int column){
+    public Cell(int row, int column) {
         this.row = row;
         this.column = column;
         this.isBomb = false;
         this.isRevealed = false;
-        this.value = -1;
+        this.value = 0;
     }
 
     public void setBomb() {
         this.isBomb = true;
+    }
+
+    public boolean getIsBomb() {
+        return this.isBomb;
     }
 
     public void setRevealed() {
@@ -31,13 +35,17 @@ public class Cell {
         this.value = value;
     }
 
+    public int getValue() {
+        return this.value;
+    }
+
     public void printCell() {
-        if(!isRevealed){
+        if (!isRevealed) {
             System.out.print("[ ]");
-        } else if(isBomb){
+        } else if (isBomb) {
             System.out.print("[*]");
         } else {
-            System.out.println("["+value+"]");
+            System.out.print("[" + value + "]");
         }
     }
 }
