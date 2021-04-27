@@ -35,12 +35,12 @@ public class Level {
         public int getNumBombs() {
             switch(this.difficulty) {
                 case "HARD":
-                    return 20;
+                    return 30;
                 case "MEDIUM":
                     return 15;
                 case "EASY":
                 default:
-                    return 10;
+                    return 5;
             }
         }
     }
