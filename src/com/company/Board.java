@@ -20,14 +20,16 @@ public class Board {
     public void init() {
         int totalCells = gridSize * gridSize;
         int[][] bombs = new int[totalCells][2];
-        for(int row = 0; row < gridSize; row++) {
-            for(int col = 0; col < gridSize; col++) {
+        for (int row = 0; row < gridSize; row++) {
+            for (int col = 0; col < gridSize; col++) {
                 board[row][col] = new Cell(row, col);
                 int bombIdx = row * gridSize + col;
                 bombs[bombIdx] = new int[]{row, col};
             }
         }
         placeMines(bombs);
+        populateCellValues();
+        revealAll();
     }
 
     public void playGame() {
@@ -38,16 +40,16 @@ public class Board {
 
     private void printBoard() {
         printBoardHeader();
-        for(int row = 0; row < gridSize; row++) {
-            if(row > 9) {
-                System.out.print(row+" ");
+        for (int row = 0; row < gridSize; row++) {
+            if (row > 9) {
+                System.out.print(row + " ");
             } else {
-                System.out.print(row+"  ");
+                System.out.print(row + "  ");
             }
-            for(int col = 0; col < gridSize; col++) {
+            for (int col = 0; col < gridSize; col++) {
                 Cell cell = board[row][col];
                 cell.printCell();
-                if(col == gridSize - 1){
+                if (col == gridSize - 1) {
                     System.out.print("\n");
                 }
             }
@@ -55,13 +57,13 @@ public class Board {
     }
 
     private void printBoardHeader() {
-        for(int i = 0; i < gridSize; i++) {
-            if(i == 0) {
-                System.out.print("    "+i);
-            } else if (i > 9){
-                System.out.print(" "+i);
-            }else {
-                System.out.print("  "+i);
+        for (int i = 0; i < gridSize; i++) {
+            if (i == 0) {
+                System.out.print("    " + i);
+            } else if (i > 9) {
+                System.out.print(" " + i);
+            } else {
+                System.out.print("  " + i);
             }
         }
         System.out.print("\n");
@@ -78,22 +80,50 @@ public class Board {
             int[] randomCell = bombs[randomIndex];
             row = randomCell[0];
             col = randomCell[1];
-            if(!board[row][col].getIsBomb()) {
+            if (!board[row][col].getIsBomb()) {
                 board[row][col].setBomb();
                 placedMines++;
             }
-        } while(placedMines < numMines);
+        } while (placedMines < numMines);
     }
 
     private void revealAll() {
-        for(int row = 0; row < gridSize; row++) {
-            for(int col = 0; col < gridSize; col++) {
+        for (int row = 0; row < gridSize; row++) {
+            for (int col = 0; col < gridSize; col++) {
                 board[row][col].setRevealed();
             }
         }
     }
 
     private void populateCellValues() {
-        
+        for (int row = 0; row < gridSize; row++) {
+            for (int col = 0; col < gridSize; col++) {
+                Cell cell = board[row][col];
+                if (!cell.getIsBomb()) {
+                    int cellValue = countSurroundingBombs(row, col);
+                    cell.setValue(cellValue);
+                }
+            }
+        }
+    }
+
+    private int countSurroundingBombs(int row, int col) {
+        int bombCount = 0;
+        for (int r = row - 1; r <= row + 1; r++) {
+            // check to see if out of row bounds
+            if (r < 0 || r >= gridSize) {
+                continue;
+            }
+            for (int c = col - 1; c <= col + 1; c++) {
+                // check to see if out of column bounds
+                if (c < 0 || c >= gridSize || (r == row && c == col)) {
+                    continue;
+                }
+                if (board[r][c].getIsBomb()) {
+                    bombCount++;
+                }
+            }
+        }
+        return bombCount;
     }
 }
