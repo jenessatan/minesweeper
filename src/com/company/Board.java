@@ -29,7 +29,6 @@ public class Board {
         }
         placeMines(bombs);
         populateCellValues();
-        revealAll();
     }
 
     public void playGame() {
