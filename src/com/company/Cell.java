@@ -26,6 +26,7 @@ public class Cell {
     public void setRevealed() {
         this.isRevealed = true;
     }
+    public boolean getRevealed() { return this.isRevealed;}
 
     public void reveal() {
         // todo
