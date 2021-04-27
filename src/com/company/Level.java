@@ -23,9 +23,9 @@ public class Level {
         public int getDimensions() {
             switch(this.difficulty) {
                 case "HARD":
-                    return 15;
-                case "MEDIUM":
                     return 10;
+                case "MEDIUM":
+                    return 7;
                 case "EASY":
                 default:
                     return 5;
@@ -35,12 +35,12 @@ public class Level {
         public int getNumBombs() {
             switch(this.difficulty) {
                 case "HARD":
-                    return 20;
+                    return 50;
                 case "MEDIUM":
-                    return 15;
+                    return 20;
                 case "EASY":
                 default:
-                    return 10;
+                    return 5;
             }
         }
     }
