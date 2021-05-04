@@ -11,3 +11,20 @@
     - [x] cell with bomb(s) in vicinity --> reveal cell containing count of bombs around it
     - [x] cell without any nearby bombs --> recursively reveal cells until group has bombs around it
 - [x] repeat play game until player either dies or reveals all non-bomb cells
+
+## Game In Action
+Users first select and confirm their difficulty level
+
+![](./images/Difficulty%20Selection.jpg)
+
+They are then prompted to select a row and column to reveal
+
+![](./images/Start%20Game.jpg)
+
+Selected cells are revealed. If the cell does not have any bombs in its vicinity, it will recursively reveal all adjacent non-mine cells.
+
+![](./images/Empty%20Space.jpg)
+
+If the selected cell is a mine, they lose the game
+
+![](./images/Found%20the%20Mine.jpg)
